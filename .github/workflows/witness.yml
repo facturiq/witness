@@ -1,0 +1,67 @@
+# El testigo público de FacturIQ. Cada ejecución añade UNA línea al fichero del
+# día, pase lo que pase (fallo de red incluido): un hueco en el fichero solo
+# puede significar que el planificador no corrió. Lo dispara el registro cada
+# 5 minutos (workflow_dispatch) y GitHub lo respalda cada hora.
+name: witness
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+    inputs:
+      tree_size:
+        description: "tree_size announced by the registry (informational)"
+        required: false
+permissions:
+  contents: write
+concurrency:
+  group: witness
+  cancel-in-progress: false
+jobs:
+  witness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Record and countersign the registry head
+        env:
+          REGISTRY: https://api.facturiq.com
+          WITNESS_KEY: ${{ secrets.WITNESS_KEY }}
+        run: |
+          set -euo pipefail
+          at=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          day=$(date -u +%Y-%m-%d)
+          bucket=$(printf "%s:%02d" "$(date -u +%Y-%m-%dT%H)" $(( $(date -u +%-M) / 5 * 5 )))
+          mkdir -p witness
+          if [ -f "witness/$day.jsonl" ] && grep -q "\"bucket\":\"$bucket\"" "witness/$day.jsonl"; then
+            echo "bucket $bucket already recorded"; exit 0
+          fi
+          if cp=$(curl -sf --max-time 30 "$REGISTRY/v1/checkpoint"); then
+            head=$(echo "$cp" | jq -c '{registry_key: .registry_public_key, checkpoint: (.checkpoints[0] // null)}')
+            status=ok
+          else
+            head='{"checkpoint":"fetch_failed"}'; status=fetch_failed
+          fi
+          if attest=$(curl -sf --max-time 30 "$REGISTRY/v1/attest"); then
+            chain=$(echo "$attest" | jq -c '{ok, head, head_id, checked}')
+          else
+            chain='{"ok":"fetch_failed"}'
+          fi
+          sig=null
+          if [ "$status" = ok ] && [ -n "${WITNESS_KEY:-}" ]; then
+            ts=$(echo "$head" | jq -r '.checkpoint.tree_size // empty')
+            root=$(echo "$head" | jq -r '.checkpoint.root // empty')
+            if [ -n "$ts" ] && [ -n "$root" ]; then
+              sig=$(node -e '
+                const { createPrivateKey, sign } = require("node:crypto");
+                const key = createPrivateKey({ key: JSON.parse(process.env.WITNESS_KEY), format: "jwk" });
+                const msg = `1f916.witness.v1:${process.env.REGISTRY}:record:${process.argv[1]}:${process.argv[2]}`;
+                process.stdout.write(JSON.stringify(sign(null, Buffer.from(msg), key).toString("base64url")));
+              ' "$ts" "$root")
+            fi
+          fi
+          printf '{"at":"%s","bucket":"%s","status":"%s","head":%s,"chain":%s,"witness_sig":%s,"run":"%s"}\n' \
+            "$at" "$bucket" "$status" "$head" "$chain" "$sig" "${GITHUB_RUN_ID:-local}" >> "witness/$day.jsonl"
+          git config user.name "facturiq-witness"
+          git config user.email "witness@facturiq.com"
+          git add witness
+          git commit -m "witness $at" || exit 0
+          git push
