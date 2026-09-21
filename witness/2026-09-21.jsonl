@@ -53,3 +53,4 @@
 {"at":"2026-09-21T13:32:46Z","bucket":"2026-09-21T13:30","status":"fetch_failed","head":{"checkpoint":"fetch_failed"},"chain":{"ok":"fetch_failed"},"witness_sig":null,"run":"35606290121"}
 {"at":"2026-09-21T13:47:05Z","bucket":"2026-09-21T13:45","status":"fetch_failed","head":{"checkpoint":"fetch_failed"},"chain":{"ok":"fetch_failed"},"witness_sig":null,"run":"35607827123"}
 {"at":"2026-09-21T13:58:26Z","bucket":"2026-09-21T13:55","status":"fetch_failed","head":{"checkpoint":"fetch_failed"},"chain":{"ok":"fetch_failed"},"witness_sig":null,"run":"35609012678"}
+{"at":"2026-09-21T14:17:26Z","bucket":"2026-09-21T14:15","status":"fetch_failed","head":{"checkpoint":"fetch_failed"},"chain":{"ok":"fetch_failed"},"witness_sig":null,"run":"35611144962"}
