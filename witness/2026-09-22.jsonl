@@ -60,3 +60,4 @@
 {"at":"2026-09-22T14:50:21Z","bucket":"2026-09-22T14:50","status":"fetch_failed","head":{"checkpoint":"fetch_failed"},"chain":{"ok":"fetch_failed"},"witness_sig":null,"run":"35743092195"}
 {"at":"2026-09-22T15:01:07Z","bucket":"2026-09-22T15:00","status":"fetch_failed","head":{"checkpoint":"fetch_failed"},"chain":{"ok":"fetch_failed"},"witness_sig":null,"run":"35744359486"}
 {"at":"2026-09-22T15:19:23Z","bucket":"2026-09-22T15:15","status":"fetch_failed","head":{"checkpoint":"fetch_failed"},"chain":{"ok":"fetch_failed"},"witness_sig":null,"run":"35746495562"}
+{"at":"2026-09-22T15:32:56Z","bucket":"2026-09-22T15:30","status":"fetch_failed","head":{"checkpoint":"fetch_failed"},"chain":{"ok":"fetch_failed"},"witness_sig":null,"run":"35748112352"}
