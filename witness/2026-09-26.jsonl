@@ -66,3 +66,4 @@
 {"at":"2026-09-26T15:39:56Z","bucket":"2026-09-26T15:35","status":"fetch_failed","head":{"checkpoint":"fetch_failed"},"chain":{"ok":"fetch_failed"},"witness_sig":null,"run":"36252718429"}
 {"at":"2026-09-26T15:52:16Z","bucket":"2026-09-26T15:50","status":"fetch_failed","head":{"checkpoint":"fetch_failed"},"chain":{"ok":"fetch_failed"},"witness_sig":null,"run":"36253433982"}
 {"at":"2026-09-26T16:04:44Z","bucket":"2026-09-26T16:00","status":"fetch_failed","head":{"checkpoint":"fetch_failed"},"chain":{"ok":"fetch_failed"},"witness_sig":null,"run":"36254159050"}
+{"at":"2026-09-26T16:21:43Z","bucket":"2026-09-26T16:20","status":"fetch_failed","head":{"checkpoint":"fetch_failed"},"chain":{"ok":"fetch_failed"},"witness_sig":null,"run":"36255173362"}
